@@ -1,0 +1,70 @@
+package org.example.popitkan5.config.swagger;
+
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.examples.Example;
+import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.parameters.RequestBody;
+import io.swagger.v3.oas.models.responses.ApiResponse;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * Конфигурация с примерами запросов и ответов для документации API
+ */
+//@Configuration
+//@Profile("swagger-docs")
+public class ApiExamplesConfig {
+
+//    @Bean
+//    public OpenAPI customOpenAPI() {
+        Components components = new Components();
+
+        // Пример запроса регистрации
+        components.addRequestBodies("registerRequest", new RequestBody()
+                .content(new Content()
+                        .addMediaType("application/json", new MediaType()
+                                .addExamples("standard", new Example()
+                                        .value("{\n" +
+                                                "  \"username\": \"player123\",\n" +
+                                                "  \"telegram\": \"@player123\",\n" +
+                                                "  \"eaId\": \"ea_player123\",\n" +
+                                                "  \"password\": \"securePassword123\",\n" +
+                                                "  \"attributes\": {\n" +
+                                                "    \"country\": \"Russia\",\n" +
+                                                "    \"age\": \"25\"\n" +
+                                                "  }\n" +
+                                                "}")
+                                        .summary("Стандартная регистрация"))
+                        )));
+
+        // Пример запроса аутентификации
+        components.addRequestBodies("loginRequest", new RequestBody()
+                .content(new Content()
+                        .addMediaType("application/json", new MediaType()
+                                .addExamples("standard", new Example()
+                                        .value("{\n" +
+                                                "  \"username\": \"player123\",\n" +
+                                                "  \"password\": \"securePassword123\"\n" +
+                                                "}")
+                                        .summary("Стандартная аутентификация"))
+                        )));
+
+        // Пример успешного ответа с JWT токеном
+        components.addResponses("authSuccess", new ApiResponse()
+                .description("Успешная аутентификация")
+                .content(new Content()
+                        .addMediaType("application/json", new MediaType()
+                                .addExamples("standard", new Example()
+                                        .value("{\n" +
+                                                "  \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJwbGF5ZXIxMjMiLCJpYXQiOjE2MTYwOTE1NzEsImV4cCI6MTYxNjA5NTE3MX0.aBcDeFgHiJkLmNoPqRsTuVwXyZ\",\n" +
+                                                "  \"username\": \"player123\",\n" +
+                                                "  \"role\": \"USER\"\n" +
+                                                "}")
+                                        .summary("Успешный вход"))
+                        )));
+
+        return new OpenAPI().components(components);
+    }
+}

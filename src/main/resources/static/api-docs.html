@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DonChamps API Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        h1, h2, h3, h4 {
+            color: #0066cc;
+        }
+        .endpoint {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .method {
+            font-weight: bold;
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+        }
+        .get { background-color: #61affe; }
+        .post { background-color: #49cc90; }
+        .put { background-color: #fca130; }
+        .delete { background-color: #f93e3e; }
+        .path {
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+        .description {
+            margin: 1rem 0;
+        }
+        .response, .request {
+            background-color: #f0f0f0;
+            padding: 1rem;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .tag {
+            margin-top: 3rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #0066cc;
+        }
+        .authorization {
+            background-color: #e7f3ff;
+            padding: 1rem;
+            border-left: 4px solid #0066cc;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>DonChamps API Documentation</h1>
+    <p>API для игровой платформы DonChamps</p>
+    
+    <div class="authorization">
+        <h2>Аутентификация</h2>
+        <p>Большинство API эндпоинтов требуют аутентификации с использованием JWT токена. Токен должен быть передан в заголовке Authorization:</p>
+        <p><code>Authorization: Bearer &lt;ваш_jwt_токен&gt;</code></p>
+        <p>Токен можно получить через эндпоинты /api/auth/register или /api/auth/login.</p>
+    </div>
+
+    <div class="tag">
+        <h2>Auth API</h2>
+        <p>API для аутентификации и регистрации пользователей</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/auth/register</span>
+        <div class="description">
+            <p>Регистрация нового пользователя в системе и возвращение JWT токена.</p>
+        </div>
+        <h4>Запрос:</h4>
+        <div class="request">
+{
+  "username": "player123",
+  "telegram": "@player123",
+  "eaId": "ea_player123",
+  "password": "securePassword123",
+  "attributes": {
+    "country": "Russia",
+    "age": "25"
+  }
+}
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "username": "player123",
+  "role": "USER"
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/auth/login</span>
+        <div class="description">
+            <p>Аутентификация пользователя по логину и паролю, возвращает JWT токен.</p>
+        </div>
+        <h4>Запрос:</h4>
+        <div class="request">
+{
+  "username": "player123",
+  "password": "securePassword123"
+}
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "username": "player123",
+  "role": "USER"
+}
+        </div>
+    </div>
+
+    <div class="tag">
+        <h2>User API</h2>
+        <p>API для работы с пользователями</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/users/me</span>
+        <div class="description">
+            <p>Возвращает данные авторизованного пользователя.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "id": 1,
+  "username": "player123",
+  "telegram": "@player123",
+  "eaId": "ea_player123",
+  "role": "USER",
+  "attributes": {
+    "country": "Russia",
+    "age": "25"
+  }
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/users</span>
+        <div class="description">
+            <p>Возвращает список всех пользователей.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+[
+  {
+    "id": 1,
+    "username": "player123",
+    "telegram": "@player123",
+    "eaId": "ea_player123",
+    "role": "USER",
+    "attributes": {
+      "country": "Russia",
+      "age": "25"
+    }
+  },
+  {
+    "id": 2,
+    "username": "admin",
+    "telegram": "@admin",
+    "eaId": "ea_admin",
+    "role": "ADMIN",
+    "attributes": {}
+  }
+]
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/users/{id}</span>
+        <div class="description">
+            <p>Возвращает данные пользователя по его идентификатору.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "id": 1,
+  "username": "player123",
+  "telegram": "@player123",
+  "eaId": "ea_player123",
+  "role": "USER",
+  "attributes": {
+    "country": "Russia",
+    "age": "25"
+  }
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method put">PUT</span>
+        <span class="path">/api/users/attributes</span>
+        <div class="description">
+            <p>Обновляет или добавляет атрибуты текущего пользователя.</p>
+        </div>
+        <h4>Запрос:</h4>
+        <div class="request">
+{
+  "country": "USA",
+  "age": "26",
+  "skillLevel": "advanced"
+}
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "country": "USA",
+  "age": "26",
+  "skillLevel": "advanced"
+}
+        </div>
+    </div>
+
+    <div class="tag">
+        <h2>Tournament API</h2>
+        <p>API для работы с турнирами</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/tournaments</span>
+        <div class="description">
+            <p>Возвращает список всех доступных турниров.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+[
+  {
+    "id": 1,
+    "name": "FIFA 2025 Championship",
+    "status": "active",
+    "startDate": "2025-05-15T10:00:00",
+    "endDate": "2025-05-20T18:00:00",
+    "maxParticipants": 32,
+    "currentParticipants": 16,
+    "prizeFund": 100000
+  },
+  {
+    "id": 2,
+    "name": "EA Sports Cup",
+    "status": "planned",
+    "startDate": "2025-06-10T12:00:00",
+    "endDate": "2025-06-15T20:00:00",
+    "maxParticipants": 16,
+    "currentParticipants": 4,
+    "prizeFund": 50000
+  }
+]
+        </div>
+    </div>
+
+    <div class="tag">
+        <h2>Test API</h2>
+        <p>Тестовые эндпоинты для проверки аутентификации</p>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/public</span>
+        <div class="description">
+            <p>Доступен без аутентификации.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "message": "Это публичный ресурс"
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/simple</span>
+        <div class="description">
+            <p>Простой тестовый эндпоинт.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "message": "Привет от DonChamps API!"
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/user</span>
+        <div class="description">
+            <p>Доступен только авторизованным пользователям.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "message": "Это защищенный пользовательский ресурс",
+  "username": "player123",
+  "authorities": [
+    {
+      "authority": "ROLE_USER"
+    }
+  ]
+}
+        </div>
+    </div>
+
+    <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/api/admin</span>
+        <div class="description">
+            <p>Доступен только пользователям с ролью ADMIN.</p>
+        </div>
+        <h4>Ответ (200 OK):</h4>
+        <div class="response">
+{
+  "message": "Это защищенный администраторский ресурс",
+  "username": "admin",
+  "authorities": [
+    {
+      "authority": "ROLE_ADMIN"
+    }
+  ]
+}
+        </div>
+    </div>
+
+    <footer style="margin-top: 3rem; text-align: center; color: #666; font-size: 0.9rem;">
+        <p>DonChamps API Documentation | Версия 1.0 | &copy; 2025 DonChamps</p>
+    </footer>
+</body>
+</html>
